@@ -18,3 +18,14 @@ def MapRequestEntityPerson(request: PatientRequest):
                       request.password,
                       request.created_at,
                       request.updated_at)
+
+def EntityToNewEntityPerson(newPerson, oldPerson):
+    oldPerson.username = newPerson.username
+    oldPerson.name  = newPerson.name
+    oldPerson.last_name  = newPerson.last_name
+    oldPerson.phone  = newPerson.phone
+    oldPerson.birthdate  = newPerson.birthdate
+    oldPerson.iden_doc  = newPerson.iden_doc
+    oldPerson.address  = newPerson.address
+    oldPerson.sex  = newPerson.sex
+    oldPerson.updated_at  = date.today()

@@ -25,7 +25,7 @@ def PostUniversity(handler: AddUniversityHandler):
         return jsonify(ModifyResponse(response)), 201 
     except CustomException as e:
         response = Response('Datos no válidos',HttpStatusCode['BAD REQUEST'],'',False,e.errorMessage)
-        return jsonify(ModifyResponse(response)), 400
+        return jsonify(ModifyResponse(response)), HttpStatusCode['BAD REQUEST']
     
 
 @university.route("/", methods=['GET'])
@@ -34,10 +34,10 @@ def PostUniversity(handler: AddUniversityHandler):
 def GetUniversity(handler: ConsultUniversityHandler):
     try:
         response = handler.Handle()
-        return jsonify(ModifyResponse(response)), 201 
+        return jsonify(ModifyResponse(response)), response.status_code 
     except CustomException as e:
         response = Response('No se poseen universidades registradas',HttpStatusCode['NOT FOUND'],'',False,e.errorMessage)
-        return jsonify(ModifyResponse(response)), 404
+        return jsonify(ModifyResponse(response)), HttpStatusCode['NOT FOUND']
     
 
 
@@ -48,10 +48,10 @@ def DeleteUniversity(handler: DeleteUniversityHandler, id):
     try:
         command = DeleteUniversityCommands(id)
         response = handler.Handle(command)
-        return jsonify(ModifyResponse(response)), 204
+        return jsonify(ModifyResponse(response)), response.status_code 
     except CustomException as e:
         response = Response('No se poseen universidades registradas',HttpStatusCode['NOT FOUND'],'',False,e.errorMessage)
-        return jsonify(ModifyResponse(response)), 404
+        return jsonify(ModifyResponse(response)), HttpStatusCode['NOT FOUND']
     
 @university.route("/<int:id>", methods=['PUT'])
 
@@ -60,7 +60,7 @@ def PutUniversity(handler: PutUniversityHandler, id):
     try:
         command = PutUniversityCommands(UniversityRequest(request),id)
         response = handler.Handle(command)
-        return jsonify(ModifyResponse(response)), 200
+        return jsonify(ModifyResponse(response)), response.status_code 
     except CustomException as e:
         response = Response('No se poseen universidades registradas',HttpStatusCode['CONFLICT'],'',False,e.errorMessage)
-        return jsonify(ModifyResponse(response)), 409
+        return jsonify(ModifyResponse(response)), HttpStatusCode['CONFLICT']

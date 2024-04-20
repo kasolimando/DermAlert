@@ -22,10 +22,10 @@ def PostDegree(handler: AddDegreeHandler):
     try:
         command = AddDegreeCommands(DegreeRequest(request)) 
         response = handler.Handle(command)
-        return jsonify(ModifyResponse(response)), 201 
+        return jsonify(ModifyResponse(response)), response.status_code  
     except CustomException as e:
         response = Response('Datos no válidos',HttpStatusCode['BAD REQUEST'],'',False,e.errorMessage)
-        return jsonify(ModifyResponse(response)), 400
+        return jsonify(ModifyResponse(response)), HttpStatusCode['BAD REQUEST']
     
 
 @degrees.route("/", methods=['GET'])
@@ -34,10 +34,10 @@ def PostDegree(handler: AddDegreeHandler):
 def GetDegree(handler: ConsultDegreeHandler):
     try:
         response = handler.Handle()
-        return jsonify(ModifyResponse(response)), 201 
+        return jsonify(ModifyResponse(response)), response.status_code 
     except CustomException as e:
         response = Response('No se poseen grados académicos registradas',HttpStatusCode['NOT FOUND'],'',False,e.errorMessage)
-        return jsonify(ModifyResponse(response)), 404
+        return jsonify(ModifyResponse(response)), HttpStatusCode['NOT FOUND']
     
 
 
@@ -48,10 +48,10 @@ def DeleteDegree(handler: DeleteDegreeHandler, id):
     try:
         command = DeleteDegreeCommands(id)
         response = handler.Handle(command)
-        return jsonify(ModifyResponse(response)), 204
+        return jsonify(ModifyResponse(response)), response.status_code 
     except CustomException as e:
         response = Response('No se poseen grados académicos registradas',HttpStatusCode['NOT FOUND'],'',False,e.errorMessage)
-        return jsonify(ModifyResponse(response)), 404
+        return jsonify(ModifyResponse(response)), HttpStatusCode['NOT FOUND']
     
 @degrees.route("/<int:id>", methods=['PUT'])
 
@@ -60,7 +60,7 @@ def PutDegree(handler: PutDegreeHandler, id):
     try:
         command = PutDegreeCommands(DegreeRequest(request),id)
         response = handler.Handle(command)
-        return jsonify(ModifyResponse(response)), 200
+        return jsonify(ModifyResponse(response)), response.status_code 
     except CustomException as e:
         response = Response('No se poseen grados académicos registradas',HttpStatusCode['CONFLICT'],'',False,e.errorMessage)
-        return jsonify(ModifyResponse(response)), 409
+        return jsonify(ModifyResponse(response)), HttpStatusCode['CONFLICT']

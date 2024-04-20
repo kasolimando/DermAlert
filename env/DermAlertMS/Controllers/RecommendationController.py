@@ -22,10 +22,10 @@ def PostRecommendation(handler: AddRecommendationHandler):
     try:
         command = AddRecommendationCommands(RecommendationRequest(request)) 
         response = handler.Handle(command)
-        return jsonify(ModifyResponse(response)), 201 
+        return jsonify(ModifyResponse(response)), response.status_code 
     except CustomException as e:
         response = Response('Datos no válidos',HttpStatusCode['BAD REQUEST'],'',False,e.errorMessage)
-        return jsonify(ModifyResponse(response)), 400
+        return jsonify(ModifyResponse(response)), HttpStatusCode['BAD REQUEST']
     
 
 @recommendations.route("/", methods=['GET'])
@@ -34,10 +34,10 @@ def PostRecommendation(handler: AddRecommendationHandler):
 def GetRecommendation(handler: ConsultRecommendationHandler):
     try:
         response = handler.Handle()
-        return jsonify(ModifyResponse(response)), 201 
+        return jsonify(ModifyResponse(response)), response.status_code  
     except CustomException as e:
         response = Response('No se poseen universidades registradas',HttpStatusCode['NOT FOUND'],'',False,e.errorMessage)
-        return jsonify(ModifyResponse(response)), 404
+        return jsonify(ModifyResponse(response)), HttpStatusCode['NOT FOUND']
     
 
 
@@ -48,10 +48,10 @@ def DeleteRecommendation(handler: DeleteRecommendationHandler, id):
     try:
         command = DeleteRecommendationCommands(id)
         response = handler.Handle(command)
-        return jsonify(ModifyResponse(response)), 204
+        return jsonify(ModifyResponse(response)), response.status_code 
     except CustomException as e:
         response = Response('No se poseen universidades registradas',HttpStatusCode['NOT FOUND'],'',False,e.errorMessage)
-        return jsonify(ModifyResponse(response)), 404
+        return jsonify(ModifyResponse(response)), HttpStatusCode['NOT FOUND']
     
 @recommendations.route("/<int:id>", methods=['PUT'])
 
@@ -60,7 +60,7 @@ def PutRecommendation(handler: PutRecommendationHandler, id):
     try:
         command = PutRecommendationCommands(RecommendationRequest(request),id)
         response = handler.Handle(command)
-        return jsonify(ModifyResponse(response)), 200
+        return jsonify(ModifyResponse(response)), response.status_code 
     except CustomException as e:
         response = Response('No se poseen universidades registradas',HttpStatusCode['CONFLICT'],'',False,e.errorMessage)
-        return jsonify(ModifyResponse(response)), 409
+        return jsonify(ModifyResponse(response)), HttpStatusCode['CONFLICT']
