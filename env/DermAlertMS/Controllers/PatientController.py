@@ -10,29 +10,29 @@ from DermAlertMS_Application.Requests.PatientRequest import PatientRequest
 from DermAlertMS_Application.Handlers.Queries.ConsultPatientHandler import ConsultPatientHandler
 
 
-patient = Blueprint("patients", __name__)
+patients = Blueprint("patients", __name__)
 
-@patient.route("/", methods=['POST'])
+@patients.route("/", methods=['POST'])
 
 @inject
 def PostPatient(handler: AddPatientHandler):
     try:
         command = AddPatientCommands(PatientRequest(request)) 
         response = handler.Handle(command)
-        return jsonify(ModifyResponse(response)), 201 
+        return jsonify(ModifyResponse(response)), response.status_code  
     except CustomException as e:
         response = Response('Datos no válidos',HttpStatusCode['BAD REQUEST'],'',False,e.errorMessage)
-        return jsonify(ModifyResponse(response)), 400
+        return jsonify(ModifyResponse(response)), HttpStatusCode['BAD REQUEST']
 
 
-@patient.route("/", methods=['GET'])
+@patients.route("/", methods=['GET'])
 
 @inject
-def GetUniversity(handler: ConsultPatientHandler):
+def GetPatient(handler: ConsultPatientHandler):
     try:
         response = handler.Handle()
-        return jsonify(ModifyResponse(response)), 201 
+        return jsonify(ModifyResponse(response)), response.status_code 
     except CustomException as e:
-        response = Response('No se poseen universidades registradas',HttpStatusCode['NOT FOUND'],'',False,e.errorMessage)
-        return jsonify(ModifyResponse(response)), 404
-    
+        response = Response('No se poseen pacientes registradas',HttpStatusCode['NOT FOUND'],'',False,e.errorMessage)
+        return jsonify(ModifyResponse(response)), HttpStatusCode['NOT FOUND']
+
