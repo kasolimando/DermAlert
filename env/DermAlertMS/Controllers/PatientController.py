@@ -1,6 +1,8 @@
 from flask import Blueprint, request, jsonify
 from flask_injector import inject
 from DermAlertMS_Application.Commands.AddPatientCommand import AddPatientCommands
+from DermAlertMS_Application.Commands.PutPatientCommand import PutPatientCommands
+from DermAlertMS_Application.Handlers.Commands.PutPatientHandler import PutPatientHandler
 from DermAlertMS_Application.Handlers.Commands.AddPatientHandler import AddPatientHandler
 from DermAlertMS_Application.Mappers.ResponseMapper import ModifyResponse
 from DermAlertMS_Application.Exceptions.CustomException import CustomException
@@ -35,4 +37,18 @@ def GetPatient(handler: ConsultPatientHandler):
     except CustomException as e:
         response = Response('No se poseen pacientes registradas',HttpStatusCode['NOT FOUND'],'',False,e.errorMessage)
         return jsonify(ModifyResponse(response)), HttpStatusCode['NOT FOUND']
+    
+
+
+@patients.route("/<username>", methods=['PUT'])
+
+@inject
+def PutPatient(handler: PutPatientHandler, username):
+    try:
+        command = PutPatientCommands(PatientRequest(request),username)
+        response = handler.Handle(command)
+        return jsonify(ModifyResponse(response)), response.status_code 
+    except CustomException as e:
+        response = Response('No se poseen grados académicos registradas',HttpStatusCode['CONFLICT'],'',False,e.errorMessage)
+        return jsonify(ModifyResponse(response)), HttpStatusCode['CONFLICT']
 
