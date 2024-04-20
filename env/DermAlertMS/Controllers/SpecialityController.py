@@ -22,10 +22,10 @@ def PostSpeciality(handler: AddSpecialityHandler):
     try:
         command = AddSpecialityCommands(SpecialityRequest(request)) 
         response = handler.Handle(command)
-        return jsonify(ModifyResponse(response)), 201 
+        return jsonify(ModifyResponse(response)), response.status_code 
     except CustomException as e:
         response = Response('Datos no válidos',HttpStatusCode['BAD REQUEST'],'',False,e.errorMessage)
-        return jsonify(ModifyResponse(response)), 400
+        return jsonify(ModifyResponse(response)), HttpStatusCode['BAD REQUEST']
     
 
 @specialities.route("/", methods=['GET'])
@@ -34,10 +34,10 @@ def PostSpeciality(handler: AddSpecialityHandler):
 def GetSpeciality(handler: ConsultSpecialityHandler):
     try:
         response = handler.Handle()
-        return jsonify(ModifyResponse(response)), 201 
+        return jsonify(ModifyResponse(response)), response.status_code 
     except CustomException as e:
         response = Response('No se poseen grados académicos registradas',HttpStatusCode['NOT FOUND'],'',False,e.errorMessage)
-        return jsonify(ModifyResponse(response)), 404
+        return jsonify(ModifyResponse(response)), HttpStatusCode['NOT FOUND']
     
 
 
@@ -48,10 +48,10 @@ def DeleteSpeciality(handler: DeleteSpecialityHandler, id):
     try:
         command = DeleteSpecialityCommands(id)
         response = handler.Handle(command)
-        return jsonify(ModifyResponse(response)), 204
+        return jsonify(ModifyResponse(response)), response.status_code 
     except CustomException as e:
         response = Response('No se poseen grados académicos registradas',HttpStatusCode['NOT FOUND'],'',False,e.errorMessage)
-        return jsonify(ModifyResponse(response)), 404
+        return jsonify(ModifyResponse(response)), HttpStatusCode['NOT FOUND']
     
 @specialities.route("/<int:id>", methods=['PUT'])
 
@@ -60,7 +60,7 @@ def PutSpeciality(handler: PutSpecialityHandler, id):
     try:
         command = PutSpecialityCommands(SpecialityRequest(request),id)
         response = handler.Handle(command)
-        return jsonify(ModifyResponse(response)), 200
+        return jsonify(ModifyResponse(response)), response.status_code 
     except CustomException as e:
         response = Response('No se poseen grados académicos registradas',HttpStatusCode['CONFLICT'],'',False,e.errorMessage)
-        return jsonify(ModifyResponse(response)), 409
+        return jsonify(ModifyResponse(response)), HttpStatusCode['CONFLICT']
